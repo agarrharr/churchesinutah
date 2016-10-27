@@ -1,0 +1,19 @@
+title: Churches in Utah
+description: A list of Bible-based Churches in Utah.
+markdown: kramdown
+highlighter: pygments
+permalink: /:title/
+paginate: 5
+siteurl:
+baseurl:
+google_analytics_code: UA-31980509-14
+exclude: [bower.json, README.md]
+defaults:
+  - scope:
+      type: posts
+    values:
+      layout: post
+  - scope:
+      type: pages
+    values:
+      layout: default

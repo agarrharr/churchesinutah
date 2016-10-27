@@ -1,0 +1,11 @@
+{
+  "name": "churchesinutah.com",
+  "version": "0.0.0",
+  "authors": [
+    "Adam Harris <aharris88@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "semantic": "semantic-ui#~2.1.2"
+  }
+}

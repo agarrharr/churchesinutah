@@ -1,0 +1,243 @@
+---
+---
+
+<style type="text/css">
+  html, body { height: 100%; margin: 0; padding: 0; }
+  #map {
+    height: 700px;
+    width: 700px;
+    margin: 20px auto;
+  }
+</style>
+
+<div id="map"></div>
+
+<script type="text/javascript">
+  var map;
+  var infoWindow;
+  var markers = [];
+  var churches = [
+    {
+      name: 'Lifestone Church',
+      position: {lat: 40.485049, lng: -111.998742},
+      address: '4550 W Mount Ogden Peak Dr, Herriman, UT 84096',
+      website: 'http://www.lifestonechurch.net/',
+      denomination: 'Baptist'
+    },
+    {
+      name: 'Ekklesia',
+      address: '844 S 200 E, Salt Lake City, UT 84111',
+      position: {lat: 40.750880, lng: -111.885838},
+      website: 'http://www.ekklesiaslc.org/',
+      denomination: 'unknown'
+    },
+    {
+      name: 'New Pilgrim Baptist Church',
+      address: '5133 South Heath Ave,  Salt Lake City, UT 84118',
+      position: {lat: 40.658176, lng: -112.011421},
+      website: 'http://www.newpilgrimbaptist.com/',
+      denomination: 'Baptist'
+    },
+    {
+      name: 'Risen Life Church',
+      address: '2780 East 3900 South, Salt Lake City, UT 84124',
+      position: {lat: 40.686712, lng: -111.813243},
+      website: 'http://risenlifeutah.org/',
+      denomination: 'unknown'
+    },
+    {
+      name: 'South Jordan Community Church',
+      address: '10118 S. Redwood Road, Suite E, South Jordan, UT  84095',
+      position: {lat: 40.567496, lng: -111.939570},
+      website: 'http://southjordancommunitychurch.com/',
+      denomination: 'Christian and Missionary Alliance'
+    },
+    {
+      name: 'The Mission Church',
+      address: '10778 Redwood Rd, South Jordan, UT 84095',
+      position: {lat: 40.555521, lng: -111.939245},
+      website: 'http://themissionutah.com/',
+      denomination: 'unknown'
+    },
+    {
+      name: 'The Bridge Church',
+      address: '4544 West Harvest Moon Drive',
+      position: {lat: 40.539031, lng: -111.999825},
+      website: 'http://www.thebridgelive.org/',
+      denomination: 'Non-denominational'
+    },
+    {
+      name: 'South Mountain Community Church: Draper Campus',
+      address: '14216 S. Bangerter Parkway | Draper, UT 84020',
+      position: {lat: 40.492280, lng: -111.882016},
+      website: 'http://smccutah.org/draper/',
+      denomination: 'Non-denominational'
+    },
+    {
+      name: 'South Mountain Community Church: South Jordan Campus',
+      address: '4125 Foxview Dr, So Jordan UT 84095',
+      position: {lat: 40.541818, lng: -111.988345},
+      website: 'http://smccutah.org/southjordan/',
+      denomination: 'Non-denominational'
+    },
+    {
+      name: 'South Mountain Community Church: St George Campus',
+      address: '291 East 1400 South, Ste 4, St George, UT 84790',
+      position: {lat: 37.084736, lng: -113.577270},
+      website: 'http://smccutah.org/stgeorge/',
+      denomination: 'Non-denominational'
+    },
+    {
+      name: 'South Mountain Community Church: West Jordan Campus',
+      address: '9324 Hawley Park Rd, West Jordan UT 84081',
+      position: {lat: 40.581387, lng: -112.024564},
+      website: 'http://smccutah.org/west-jordan/',
+      denomination: 'Non-denominational'
+    },
+    {
+      name: 'South Mountain Community Church: Lehi Campus',
+      address: '520 South 850 East Suite B 1, Lehi, UT 84043',
+      position: {lat: 40.381417, lng: -111.835992},
+      website: 'http://smccutah.org/lehi/',
+      denomination: 'Non-denominational'
+    },
+    {
+      name: 'Hope Lutheran Church',
+      address: '2930 9000 South, West Jordan, UT',
+      position: {lat: 40.588357, lng: -111.962522},
+      website: 'http://westjordanlutherans.org/',
+      denomination: 'Lutheran'
+    },
+    {
+      name: 'Good Shepherd Lutheran Church',
+      address: '8575 South 700 East, Sandy, UT 84070',
+      position: {lat: 40.595374, lng: -111.871663},
+      website: 'http://goodshepherdutah.com/',
+      denomination: 'Lutheran'
+    },
+    {
+      name: 'Centerpoint Church',
+      address: '175 South 400 East, Orem',
+      position: {lat: 40.292232, lng: -111.684415},
+      website: 'http://www.centerpointutah.org/',
+      denomination: 'unknown'
+    },
+    {
+      name: 'Holy Apostles Orthodox Christian Church',
+      address: '280 West Center Street, Orem, UT 84057',
+      position: {lat: 40.297183, lng: -111.702635},
+      website: 'http://orthodoxorem.org/',
+      denomination: 'Greek Orthodox Church of Antioch'
+    },
+    {
+      name: 'St. Francis of Assisi Catholic Church',
+      address: '65 East 500 North, Orem, UT 84057',
+      position: {lat: 40.307596, lng: -111.694157},
+      website: 'http://www.oremstfrancis.org/',
+      denomination: 'Catholic'
+    },
+    {
+      name: 'Tooele Methodist Church',
+      address: '78 East Utah Avenue, Tooele, UT 84074',
+      position: {lat: 40.534147, lng: -112.296151},
+      website: 'http://tooelecumc.org/',
+      denomination: 'United Methodist Church'
+    },
+    {
+      name: 'First Baptist Church Tooele',
+      address: '580 S Main St, Tooele, UT',
+      position: {lat: 40.542120, lng: -112.298406},
+      website: 'http://www.tooelefirstbaptist.org/',
+      denomination: 'Baptist'
+    },
+    {
+      name: 'Tooele Christian Fellowship',
+      address: '40 N Main St, Tooele, UT',
+      position: {lat: 40.531443, lng: -112.297876},
+      website: 'http://tooelechristianfellowship.org/',
+      denomination: 'unknown'
+    },
+    {
+      name: 'Cornerstone Baptist Church',
+      address: '276 E 500 N, Tooele, UT',
+      position: {lat: 40.540488, lng: -112.290698},
+      website: 'http://cornerstonebaptistutah.org/',
+      denomination: 'Baptist'
+    },
+    {
+      name: 'New Life Christian Fellowship',
+      address: '411 E Utah Avenue Tooele, UT 84074',
+      position: {lat: 40.534425, lng: -112.286501},
+      website: 'http://www.nlot.org/',
+      denomination: 'unknown'
+    },
+    {
+      name: 'First Baptist Church Provo',
+      address: '1144 Columbia Ln, Provo, UT 84604',
+      position: {lat: 40.258408, lng: -111.676901},
+      website: 'http://fbcprovo.org/',
+      denomination: 'Baptist'
+    },
+    {
+      name: 'St. Mary\'s Episcopal Church',
+      address: '50 West 200 North, Provo, UT 84601',
+      position: {lat: 40.236851, lng: -111.659729},
+      website: 'http://www.stmarysprovo.org/',
+      denomination: ['Episcopal', 'Anglican']
+    },
+    {
+      name: 'Provo Bible Church',
+      address: '1449 West 1150 South, Provo, UT 84601 ',
+      position: {lat: 40.218406, lng: -111.683558},
+      website: 'http://www.provobible.com/',
+      denomination: 'unknown'
+    },
+    {
+      name: 'Provo Seventh-day Adventist Church',
+      address: '255 South 700 East, Provo, UT 84606',
+      position: {lat: 40.230481, lng: -111.646027},
+      website: 'http://provo.adventistfaith.org/',
+      denomination: 'Seventh-day Adventist'
+    },
+    {
+      name: 'St. Mark\'s Lutheran Church',
+      address: '464 West 3700 North, Provo, UT 84604',
+      position: {lat: 40.283446, lng: -111.666112},
+      website: 'http://stmarksprovo.com/',
+      denomination: 'Lutheran'
+    }
+  ];
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 40.6, lng: -111.89},
+      zoom: 9,
+      scrollwheel: false
+    });
+
+  infoWindow = new google.maps.InfoWindow();
+
+  var infoWindows = [];
+
+  churches.forEach(function(item) {
+    markers.push(new google.maps.Marker({
+      position: item.position,
+      map: map,
+      title: item.name,
+      website: item.website
+    }));
+
+    markers[markers.length - 1].addListener('click', showInfoWindow);
+  });
+
+
+  }
+
+  function showInfoWindow() {
+    infoWindow.setContent('<a href="' + this.website + '" target="_blank">' + this.title + '</a>');
+    infoWindow.setPosition(this.position);
+    infoWindow.open(map, this);
+  }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5Bt5bLZ09iFMZsPlLgWW8VBWRSbNodEs&callback=initMap"></script>
